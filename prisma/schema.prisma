@@ -18,17 +18,24 @@ enum UserRole {
   TECHNICIAN
 }
 
+enum TechnicianAvailability {
+  AVAILABLE
+  BUSY
+  UNAVAILABLE
+}
+
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  role          UserRole  @default(TECHNICIAN)
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
+  id                String             @id
+  name              String
+  email             String
+  emailVerified     Boolean            @default(false)
+  image             String?
+  createdAt         DateTime           @default(now())
+  role              UserRole           @default(TECHNICIAN)
+  updatedAt         DateTime           @updatedAt
+  sessions          Session[]
+  accounts          Account[]
+  technicianProfile TechnicianProfile?
 
   @@unique([email])
   @@map("user")
@@ -99,4 +106,18 @@ model Customer {
   @@index([phone])
   @@index([city])
   @@map("customer")
+}
+
+model TechnicianProfile {
+  id           String                 @id @default(cuid())
+  userId       String                 @unique
+  skills       String[]               @default([])
+  availability TechnicianAvailability @default(AVAILABLE)
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([availability])
+  @@map("technician_profile")
 }
