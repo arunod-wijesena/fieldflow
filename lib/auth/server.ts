@@ -22,4 +22,14 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
+    user: {
+        additionalFields: {
+            role: {
+                type: ["ADMIN", "DISPATCHER", "TECHNICIAN"],
+                required: false,
+                defaultValue: "TECHNICIAN",
+                input: false,
+            },
+        },
+    },
 });
