@@ -24,6 +24,21 @@ enum TechnicianAvailability {
   UNAVAILABLE
 }
 
+enum WorkOrderStatus {
+  UNASSIGNED
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum WorkOrderPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
 model User {
   id                String             @id
   name              String
