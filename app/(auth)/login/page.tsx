@@ -54,7 +54,7 @@ export default function LoginPage() {
                 return;
             }
 
-            router.replace("/dashboard");
+            router.replace("/post-login");
             router.refresh();
         } catch {
             setFormError("Unable to sign in. Please try again.");
