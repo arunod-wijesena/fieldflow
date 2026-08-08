@@ -51,6 +51,7 @@ model User {
   sessions          Session[]
   accounts          Account[]
   technicianProfile TechnicianProfile?
+  createdWorkOrders WorkOrder[]        @relation("CreatedWorkOrders")
 
   @@unique([email])
   @@map("user")
@@ -105,7 +106,7 @@ model Verification {
 }
 
 model Customer {
-  id           String   @id @default(cuid())
+  id           String      @id @default(cuid())
   name         String
   email        String?
   phone        String?
@@ -113,8 +114,9 @@ model Customer {
   addressLine2 String?
   city         String
   postcode     String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  workOrders   WorkOrder[]
 
   @@index([name])
   @@index([email])
@@ -131,8 +133,39 @@ model TechnicianProfile {
   createdAt    DateTime               @default(now())
   updatedAt    DateTime               @updatedAt
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workOrders WorkOrder[] @relation("AssignedWorkOrders")
 
   @@index([availability])
   @@map("technician_profile")
+}
+
+model WorkOrder {
+  id              String            @id @default(cuid())
+  title           String
+  description     String
+  priority        WorkOrderPriority @default(MEDIUM)
+  status          WorkOrderStatus   @default(UNASSIGNED)
+  customerId      String
+  technicianId    String?
+  scheduledStart  DateTime?
+  scheduledEnd    DateTime?
+  completionNotes String?
+  completedAt     DateTime?
+  createdById     String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  customer   Customer           @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  technician TechnicianProfile? @relation("AssignedWorkOrders", fields: [technicianId], references: [id], onDelete: SetNull)
+  createdBy  User               @relation("CreatedWorkOrders", fields: [createdById], references: [id], onDelete: Restrict)
+
+  @@index([customerId])
+  @@index([technicianId])
+  @@index([createdById])
+  @@index([status])
+  @@index([priority])
+  @@index([scheduledStart])
+  @@index([createdAt])
+  @@map("work_order")
 }
