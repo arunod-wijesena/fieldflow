@@ -40,18 +40,19 @@ enum WorkOrderPriority {
 }
 
 model User {
-  id                String             @id
-  name              String
-  email             String
-  emailVerified     Boolean            @default(false)
-  image             String?
-  createdAt         DateTime           @default(now())
-  role              UserRole           @default(TECHNICIAN)
-  updatedAt         DateTime           @updatedAt
-  sessions          Session[]
-  accounts          Account[]
-  technicianProfile TechnicianProfile?
-  createdWorkOrders WorkOrder[]        @relation("CreatedWorkOrders")
+  id                       String             @id
+  name                     String
+  email                    String
+  emailVerified            Boolean            @default(false)
+  image                    String?
+  createdAt                DateTime           @default(now())
+  role                     UserRole           @default(TECHNICIAN)
+  updatedAt                DateTime           @updatedAt
+  sessions                 Session[]
+  accounts                 Account[]
+  technicianProfile        TechnicianProfile?
+  createdWorkOrders        WorkOrder[]        @relation("CreatedWorkOrders")
+  authoredWorkOrderUpdates WorkOrderUpdate[]  @relation("AuthoredWorkOrderUpdates")
 
   @@unique([email])
   @@map("user")
@@ -159,6 +160,7 @@ model WorkOrder {
   customer   Customer           @relation(fields: [customerId], references: [id], onDelete: Restrict)
   technician TechnicianProfile? @relation("AssignedWorkOrders", fields: [technicianId], references: [id], onDelete: SetNull)
   createdBy  User               @relation("CreatedWorkOrders", fields: [createdById], references: [id], onDelete: Restrict)
+  updates    WorkOrderUpdate[]
 
   @@index([customerId])
   @@index([technicianId])
@@ -168,4 +170,24 @@ model WorkOrder {
   @@index([scheduledStart])
   @@index([createdAt])
   @@map("work_order")
+}
+
+model WorkOrderUpdate {
+  id             String           @id @default(cuid())
+  workOrderId    String
+  authorId       String
+  previousStatus WorkOrderStatus?
+  newStatus      WorkOrderStatus
+  note           String?
+  createdAt      DateTime         @default(now())
+
+  workOrder WorkOrder @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  author    User      @relation("AuthoredWorkOrderUpdates", fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([workOrderId])
+  @@index([authorId])
+  @@index([newStatus])
+  @@index([createdAt])
+  @@index([workOrderId, createdAt])
+  @@map("work_order_update")
 }
