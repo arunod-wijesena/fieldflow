@@ -15,10 +15,10 @@ export default function UnauthorizedPage() {
                 </p>
 
                 <Link
-                    href="/dashboard"
+                    href="/"
                     className="mt-6 inline-block rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                 >
-                    Return to FieldFlow
+                    Return to home
                 </Link>
             </section>
         </main>

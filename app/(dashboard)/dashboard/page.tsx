@@ -1,6 +1,9 @@
 import { SignOutButton } from "@/components/auth/sign-out-button";
+import { requireAnyRole } from "@/lib/permissions/server";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  await requireAnyRole(["ADMIN", "DISPATCHER"]);
+
   return (
     <main className="min-h-screen bg-slate-100 p-6">
       <section className="mx-auto max-w-5xl rounded-xl bg-white p-6 shadow-sm">
