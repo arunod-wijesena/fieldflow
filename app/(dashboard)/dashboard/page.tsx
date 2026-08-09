@@ -1,4 +1,3 @@
-import { SignOutButton } from "@/components/auth/sign-out-button";
 import { requireAnyRole } from "@/lib/permissions/server";
 
 export default async function DashboardPage() {
@@ -19,8 +18,6 @@ export default async function DashboardPage() {
               Operational statistics will be implemented after work orders.
             </p>
           </div>
-
-          <SignOutButton />
         </div>
       </section>
     </main>
