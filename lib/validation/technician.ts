@@ -52,6 +52,16 @@ export const technicianFormSchema = z.object({
     availability: technicianAvailabilitySchema,
 });
 
+export const technicianUpdateFormSchema = technicianFormSchema.omit({
+    userId: true,
+});
+
+export const technicianProfileUpdateSchema =
+    technicianProfileSchema.pick({
+        skills: true,
+        availability: true,
+    });
+
 export const technicianSearchSchema = z.object({
     query: z
         .string()
@@ -76,4 +86,12 @@ export type TechnicianFormInput = z.infer<typeof technicianFormSchema>;
 
 export type TechnicianSearchInput = z.infer<
     typeof technicianSearchSchema
+>;
+
+export type TechnicianUpdateFormInput = z.infer<
+    typeof technicianUpdateFormSchema
+>;
+
+export type TechnicianProfileUpdateInput = z.infer<
+    typeof technicianProfileUpdateSchema
 >;
