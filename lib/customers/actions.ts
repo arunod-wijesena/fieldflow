@@ -8,29 +8,9 @@ import {
     customerIdSchema,
     customerSchema,
 } from "@/lib/validation/customer";
+import type { CustomerActionState, CustomerField, } from "@/lib/customers/action-state";
 
 const CUSTOMER_WRITE_ROLES = ["ADMIN", "DISPATCHER"] as const;
-
-type CustomerField =
-    | "name"
-    | "email"
-    | "phone"
-    | "addressLine1"
-    | "addressLine2"
-    | "city"
-    | "postcode";
-
-export type CustomerActionState = {
-    status: "idle" | "error";
-    message: string;
-    fieldErrors: Partial<Record<CustomerField, string>>;
-};
-
-export const initialCustomerActionState: CustomerActionState = {
-    status: "idle",
-    message: "",
-    fieldErrors: {},
-};
 
 function readString(formData: FormData, field: CustomerField) {
     const value = formData.get(field);
