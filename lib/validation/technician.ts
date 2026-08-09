@@ -10,6 +10,24 @@ export const technicianAvailabilitySchema = z.enum(
     technicianAvailabilityValues,
 );
 
+function normalizeSkills(skills: string[]) {
+    const seenSkills = new Set<string>();
+
+    return skills
+        .map((skill) => skill.trim())
+        .filter(Boolean)
+        .filter((skill) => {
+            const normalizedSkill = skill.toLowerCase();
+
+            if (seenSkills.has(normalizedSkill)) {
+                return false;
+            }
+
+            seenSkills.add(normalizedSkill);
+            return true;
+        });
+}
+
 const skillSchema = z
     .string()
     .trim()
@@ -22,15 +40,7 @@ export const technicianProfileSchema = z.object({
     skills: z
         .array(skillSchema)
         .max(20, "A technician may have no more than 20 skills.")
-        .transform((skills) => {
-            const normalizedSkills = skills.map((skill) => skill.trim());
-
-            return Array.from(
-                new Map(
-                    normalizedSkills.map((skill) => [skill.toLowerCase(), skill]),
-                ).values(),
-            );
-        }),
+        .transform(normalizeSkills),
 
     availability: technicianAvailabilitySchema,
 });
@@ -44,7 +54,7 @@ export const technicianFormSchema = z.object({
         .max(1_200, "Skills must not exceed 1,200 characters.")
         .transform((value) =>
             value
-                .split(",")
+                .split(/[,\r\n]+/)
                 .map((skill) => skill.trim())
                 .filter(Boolean),
         ),
@@ -56,11 +66,14 @@ export const technicianUpdateFormSchema = technicianFormSchema.omit({
     userId: true,
 });
 
-export const technicianProfileUpdateSchema =
-    technicianProfileSchema.pick({
-        skills: true,
-        availability: true,
-    });
+export const technicianProfileUpdateSchema = z.object({
+    skills: z
+        .array(skillSchema)
+        .max(20, "A technician may have no more than 20 skills.")
+        .transform(normalizeSkills),
+
+    availability: technicianAvailabilitySchema,
+});
 
 export const technicianSearchSchema = z.object({
     query: z
