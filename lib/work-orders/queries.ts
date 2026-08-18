@@ -186,6 +186,8 @@ export async function getWorkOrderById(rawId: string) {
                 description: true,
                 priority: true,
                 status: true,
+                customerId: true,
+                technicianId: true,
                 scheduledStart: true,
                 scheduledEnd: true,
                 completionNotes: true,
