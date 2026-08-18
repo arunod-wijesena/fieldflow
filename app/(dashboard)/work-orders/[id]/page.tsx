@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAnyRole } from "@/lib/permissions/server";
 import { getWorkOrderById } from "@/lib/work-orders/queries";
+import { WorkOrderCancelForm } from "@/components/forms/work-order-cancel-form";
+import { cancelWorkOrder } from "@/lib/work-orders/actions";
 
 type WorkOrderDetailsPageProps = {
     params: Promise<{
@@ -90,6 +92,10 @@ export default async function WorkOrderDetailsPage({
     }
 
     const workOrder = result.workOrder;
+    const canCancel =
+        workOrder.status === "UNASSIGNED" || workOrder.status === "ASSIGNED";
+
+    const cancelWorkOrderWithId = cancelWorkOrder.bind(null, workOrder.id);
 
     return (
         <main className="p-6">
@@ -114,17 +120,15 @@ export default async function WorkOrderDetailsPage({
 
                     <div className="flex flex-wrap items-center gap-3">
                         <span
-                            className={`rounded-full px-3 py-1 text-sm font-medium ${
-                                statusStyles[workOrder.status]
-                            }`}
+                            className={`rounded-full px-3 py-1 text-sm font-medium ${statusStyles[workOrder.status]
+                                }`}
                         >
                             {statusLabels[workOrder.status]}
                         </span>
 
                         <span
-                            className={`rounded-full px-3 py-1 text-sm font-medium ${
-                                priorityStyles[workOrder.priority]
-                            }`}
+                            className={`rounded-full px-3 py-1 text-sm font-medium ${priorityStyles[workOrder.priority]
+                                }`}
                         >
                             {priorityLabels[workOrder.priority]}
                         </span>
@@ -324,12 +328,10 @@ export default async function WorkOrderDetailsPage({
                                         <div>
                                             <p className="font-medium text-slate-900">
                                                 {update.previousStatus
-                                                    ? `${statusLabels[update.previousStatus]} to ${
-                                                          statusLabels[update.newStatus]
-                                                      }`
-                                                    : `Created as ${
-                                                          statusLabels[update.newStatus]
-                                                      }`}
+                                                    ? `${statusLabels[update.previousStatus]} to ${statusLabels[update.newStatus]
+                                                    }`
+                                                    : `Created as ${statusLabels[update.newStatus]
+                                                    }`}
                                             </p>
 
                                             <p className="mt-1 text-sm text-slate-600">
@@ -360,6 +362,22 @@ export default async function WorkOrderDetailsPage({
                             </p>
                         </div>
                     )}
+                    {canCancel ? (
+                        <section className="mt-8 rounded-lg border border-red-200 bg-red-50 p-5">
+                            <h2 className="text-lg font-semibold text-red-900">
+                                Cancel Work Order
+                            </h2>
+
+                            <p className="mt-2 text-sm text-red-800">
+                                Cancelling a Work Order records a status-history entry and prevents
+                                normal editing through the Dispatcher form.
+                            </p>
+
+                            <div className="mt-4">
+                                <WorkOrderCancelForm action={cancelWorkOrderWithId} />
+                            </div>
+                        </section>
+                    ) : null}
                 </section>
             </section>
         </main>

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import type {
     WorkOrderActionState,
     WorkOrderField,
+    WorkOrderStatusActionState,
 } from "@/lib/work-orders/action-state";
 import { prisma } from "@/lib/db/prisma";
 import { requireAnyRole } from "@/lib/permissions/server";
@@ -12,12 +13,19 @@ import {
     workOrderFormSchema,
     workOrderIdSchema,
     workOrderInputSchema,
+    workOrderStatusUpdateSchema,
 } from "@/lib/validation/work-order";
 
 const WORK_ORDER_WRITE_ROLES = ["ADMIN", "DISPATCHER"] as const;
 
 function readString(formData: FormData, field: WorkOrderField) {
     const value = formData.get(field);
+
+    return typeof value === "string" ? value : "";
+}
+
+function readOptionalString(FormData: FormData, field: string) {
+    const value = FormData.get(field);
 
     return typeof value === "string" ? value : "";
 }
@@ -447,6 +455,106 @@ export async function updateWorkOrder(
     revalidatePath("/work-orders");
     revalidatePath(`/work-orders/${idResult.data.id}`);
     redirect(`/work-orders/${idResult.data.id}`);
+}
+
+export async function cancelWorkOrder(
+    workOrderId: string,
+    _previousState: WorkOrderStatusActionState,
+    formData: FormData,
+): Promise<WorkOrderStatusActionState> {
+    const session = await requireAnyRole(WORK_ORDER_WRITE_ROLES);
+
+    const result = workOrderStatusUpdateSchema.safeParse({
+        workOrderId,
+        newStatus: "CANCELLED",
+        note: readOptionalString(formData, "note"),
+    });
+
+    if (!result.success) {
+        return {
+            status: "error",
+            message: "Check the cancellation details.",
+            fieldErrors: {
+                note:
+                    result.error.issues.find(
+                        (issue) => issue.path[0] === "note",
+                    )?.message ?? undefined,
+            },
+        };
+    }
+
+    try {
+        await prisma.$transaction(async (transaction) => {
+            const existingWorkOrder = await transaction.workOrder.findUnique({
+                where: {
+                    id: result.data.workOrderId,
+                },
+                select: {
+                    id: true,
+                    status: true,
+                },
+            });
+
+            if (!existingWorkOrder) {
+                throw new WorkOrderOperationError("Work Order not found.");
+            }
+
+            if (existingWorkOrder.status === "CANCELLED") {
+                throw new WorkOrderOperationError(
+                    "This Work Order is already cancelled.",
+                );
+            }
+
+            if (existingWorkOrder.status === "COMPLETED") {
+                throw new WorkOrderOperationError(
+                    "Completed Work Orders cannot be cancelled.",
+                );
+            }
+
+            if (existingWorkOrder.status === "IN_PROGRESS") {
+                throw new WorkOrderOperationError(
+                    "In-progress Work Orders cannot be cancelled through this control.",
+                );
+            }
+
+            await transaction.workOrder.update({
+                where: {
+                    id: existingWorkOrder.id,
+                },
+                data: {
+                    status: "CANCELLED",
+                },
+            });
+
+            await transaction.workOrderUpdate.create({
+                data: {
+                    workOrderId: existingWorkOrder.id,
+                    authorId: session.user.id,
+                    previousStatus: existingWorkOrder.status,
+                    newStatus: "CANCELLED",
+                    note: result.data.note ?? "Work Order cancelled.",
+                },
+            });
+        });
+    } catch (error) {
+        if (error instanceof WorkOrderOperationError) {
+            return {
+                status: "error",
+                message: error.message,
+                fieldErrors: {},
+            };
+        }
+
+        return {
+            status: "error",
+            message: "Unable to cancel the Work Order. Please try again.",
+            fieldErrors: {},
+        };
+    }
+
+    revalidatePath("/work-orders");
+    revalidatePath(`/work-orders/${result.data.workOrderId}`);
+    redirect(`/work-orders/${result.data.workOrderId}`);
 }
 
 class WorkOrderInputError extends Error {

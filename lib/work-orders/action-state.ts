@@ -18,3 +18,17 @@ export const initialWorkOrderActionState: WorkOrderActionState = {
     message: "",
     fieldErrors: {},
 };
+
+export type WorkOrderStatusField = "note";
+
+export type WorkOrderStatusActionState = {
+    status: "idle" | "error";
+    message: string;
+    fieldErrors: Partial<Record<WorkOrderStatusField, string>>;
+};
+
+export const initialWorkOrderStatusActionState: WorkOrderStatusActionState = {
+    status: "idle",
+    message: "",
+    fieldErrors: {},
+};
