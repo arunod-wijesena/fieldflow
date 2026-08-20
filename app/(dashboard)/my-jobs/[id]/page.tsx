@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getMyJobById } from "@/lib/my-jobs/queries";
 import { requireRole } from "@/lib/permissions/server";
+import { StartWorkForm } from "@/components/forms/start-work-form";
+import { startMyJob } from "@/lib/my-jobs/actions";
 
 type MyJobDetailsPageProps = {
     params: Promise<{
@@ -95,6 +97,8 @@ export default async function MyJobDetailsPage({
 
     const job = result.job;
 
+    const startMyJobWithId = startMyJob.bind(null, job.id);
+
     return (
         <main className="p-6">
             <section className="mx-auto max-w-5xl rounded-xl bg-white p-6 shadow-sm">
@@ -107,164 +111,167 @@ export default async function MyJobDetailsPage({
                             Back to My Jobs
                         </Link>
 
-                    <h1 className="mt-3 text-2xl font-semibold text-slate-900">
-                        {job.title}
-                    </h1>
+                        <h1 className="mt-3 text-2xl font-semibold text-slate-900">
+                            {job.title}
+                        </h1>
 
-                    <p className="mt-2 max-w-3xl whitespace-pre-wrap text-slate-700">
-                        {job.description}
-                    </p>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                    <span
-                        className={`rounded-full px-3 py-1 text-sm font-medium ${statusStyles[job.status]
-                            }`}
-                    >
-                        {statusLabels[job.status]}
-                    </span>
-
-                    <span
-                        className={`rounded-full px-3 py-1 text-sm font-medium ${priorityStyles[job.priority]
-                            }`}
-                    >
-                        {priorityLabels[job.priority]}
-                    </span>
-                </div>
-            </div>
-
-            <div className="mt-8 grid gap-6 lg:grid-cols-2">
-                <section className="rounded-lg border border-slate-200 p-5">
-                    <h2 className="text-lg font-semibold text-slate-900">
-                        Customer
-                    </h2>
-
-                    <p className="mt-2 font-medium text-slate-900">
-                        {job.customer.name}
-                    </p>
-
-                    <address className="mt-3 not-italic text-sm leading-6 text-slate-700">
-                        <p>{job.customer.addressLine1}</p>
-
-                        {job.customer.addressLine2 ? (
-                            <p>{job.customer.addressLine2}</p>
-                        ) : null}
-
-                        <p>
-                            {job.customer.city}, {job.customer.postcode}
-                        </p>
-                    </address>
-
-                    <dl className="mt-4 space-y-3">
-                        <DetailRow
-                            label="Phone"
-                            value={displayOptionalValue(job.customer.phone)}
-                        />
-
-                        <DetailRow
-                            label="Email"
-                            value={displayOptionalValue(job.customer.email)}
-                        />
-                    </dl>
-                </section>
-
-                <section className="rounded-lg border border-slate-200 p-5">
-                    <h2 className="text-lg font-semibold text-slate-900">
-                        Schedule
-                    </h2>
-
-                    <dl className="mt-4 space-y-4">
-                        <DetailRow
-                            label="Scheduled start"
-                            value={formatDate(job.scheduledStart)}
-                        />
-
-                        <DetailRow
-                            label="Scheduled end"
-                            value={formatDate(job.scheduledEnd)}
-                        />
-                    </dl>
-                </section>
-            </div>
-
-            {job.status === "ASSIGNED" ? (
-                <section className="mt-8 rounded-lg border border-blue-200 bg-blue-50 p-5">
-                    <h2 className="text-lg font-semibold text-blue-900">
-                        Ready to start
-                    </h2>
-
-                    <p className="mt-2 text-sm text-blue-800">
-                        This job is assigned to your Technician profile. The Start Work
-                        control will be added in the next step.
-                    </p>
-                </section>
-            ) : null}
-
-            {job.status === "IN_PROGRESS" ? (
-                <section className="mt-8 rounded-lg border border-amber-200 bg-amber-50 p-5">
-                    <h2 className="text-lg font-semibold text-amber-900">
-                        Work in progress
-                    </h2>
-
-                    <p className="mt-2 text-sm text-amber-800">
-                        Progress-note and completion controls will be added in the next
-                        workflow steps.
-                    </p>
-                </section>
-            ) : null}
-
-            <section className="mt-8">
-                <h2 className="text-lg font-semibold text-slate-900">
-                    Job history
-                </h2>
-
-                {job.updates.length > 0 ? (
-                    <ol className="mt-4 space-y-4">
-                        {job.updates.map((update) => (
-                            <li
-                                key={update.id}
-                                className="rounded-lg border border-slate-200 p-4"
-                            >
-                                <div className="flex flex-wrap items-start justify-between gap-3">
-                                    <div>
-                                        <p className="font-medium text-slate-900">
-                                            {update.previousStatus
-                                                ? `${statusLabels[update.previousStatus]} to ${statusLabels[update.newStatus]
-                                                }`
-                                                : `Created as ${statusLabels[update.newStatus]}`}
-                                        </p>
-
-                                        <p className="mt-1 text-sm text-slate-600">
-                                            By {update.author.name} ({update.author.role})
-                                        </p>
-                                    </div>
-
-                                    <time
-                                        dateTime={update.createdAt.toISOString()}
-                                        className="text-sm text-slate-500"
-                                    >
-                                        {formatDate(update.createdAt)}
-                                    </time>
-                                </div>
-
-                                {update.note ? (
-                                    <p className="mt-3 whitespace-pre-wrap text-sm text-slate-700">
-                                        {update.note}
-                                    </p>
-                                ) : null}
-                            </li>
-                        ))}
-                    </ol>
-                ) : (
-                    <div className="mt-4 rounded-lg border border-dashed border-slate-300 p-6 text-center">
-                        <p className="text-sm text-slate-600">
-                            No job history is available.
+                        <p className="mt-2 max-w-3xl whitespace-pre-wrap text-slate-700">
+                            {job.description}
                         </p>
                     </div>
-                )}
+
+                    <div className="flex flex-wrap gap-2">
+                        <span
+                            className={`rounded-full px-3 py-1 text-sm font-medium ${statusStyles[job.status]
+                                }`}
+                        >
+                            {statusLabels[job.status]}
+                        </span>
+
+                        <span
+                            className={`rounded-full px-3 py-1 text-sm font-medium ${priorityStyles[job.priority]
+                                }`}
+                        >
+                            {priorityLabels[job.priority]}
+                        </span>
+                    </div>
+                </div>
+
+                <div className="mt-8 grid gap-6 lg:grid-cols-2">
+                    <section className="rounded-lg border border-slate-200 p-5">
+                        <h2 className="text-lg font-semibold text-slate-900">
+                            Customer
+                        </h2>
+
+                        <p className="mt-2 font-medium text-slate-900">
+                            {job.customer.name}
+                        </p>
+
+                        <address className="mt-3 not-italic text-sm leading-6 text-slate-700">
+                            <p>{job.customer.addressLine1}</p>
+
+                            {job.customer.addressLine2 ? (
+                                <p>{job.customer.addressLine2}</p>
+                            ) : null}
+
+                            <p>
+                                {job.customer.city}, {job.customer.postcode}
+                            </p>
+                        </address>
+
+                        <dl className="mt-4 space-y-3">
+                            <DetailRow
+                                label="Phone"
+                                value={displayOptionalValue(job.customer.phone)}
+                            />
+
+                            <DetailRow
+                                label="Email"
+                                value={displayOptionalValue(job.customer.email)}
+                            />
+                        </dl>
+                    </section>
+
+                    <section className="rounded-lg border border-slate-200 p-5">
+                        <h2 className="text-lg font-semibold text-slate-900">
+                            Schedule
+                        </h2>
+
+                        <dl className="mt-4 space-y-4">
+                            <DetailRow
+                                label="Scheduled start"
+                                value={formatDate(job.scheduledStart)}
+                            />
+
+                            <DetailRow
+                                label="Scheduled end"
+                                value={formatDate(job.scheduledEnd)}
+                            />
+                        </dl>
+                    </section>
+                </div>
+
+                {job.status === "ASSIGNED" ? (
+                    <section className="mt-8 rounded-lg border border-blue-200 bg-blue-50 p-5">
+                        <h2 className="text-lg font-semibold text-blue-900">
+                            Ready to start
+                        </h2>
+
+                        <p className="mt-2 text-sm text-blue-800">
+                            Start work when you are ready to begin this assigned job.
+                        </p>
+
+                        <div className="mt-4">
+                            <StartWorkForm action={startMyJobWithId} />
+                        </div>
+                    </section>
+                ) : null}
+
+                {job.status === "IN_PROGRESS" ? (
+                    <section className="mt-8 rounded-lg border border-amber-200 bg-amber-50 p-5">
+                        <h2 className="text-lg font-semibold text-amber-900">
+                            Work in progress
+                        </h2>
+
+                        <p className="mt-2 text-sm text-amber-800">
+                            Progress-note and completion controls will be added in the next
+                            workflow steps.
+                        </p>
+                    </section>
+                ) : null}
+
+                <section className="mt-8">
+                    <h2 className="text-lg font-semibold text-slate-900">
+                        Job history
+                    </h2>
+
+                    {job.updates.length > 0 ? (
+                        <ol className="mt-4 space-y-4">
+                            {job.updates.map((update) => (
+                                <li
+                                    key={update.id}
+                                    className="rounded-lg border border-slate-200 p-4"
+                                >
+                                    <div className="flex flex-wrap items-start justify-between gap-3">
+                                        <div>
+                                            <p className="font-medium text-slate-900">
+                                                {update.previousStatus
+                                                    ? `${statusLabels[update.previousStatus]} to ${statusLabels[update.newStatus]
+                                                    }`
+                                                    : `Created as ${statusLabels[update.newStatus]}`}
+                                            </p>
+
+                                            <p className="mt-1 text-sm text-slate-600">
+                                                By {update.author.name} ({update.author.role})
+                                            </p>
+                                        </div>
+
+                                        <time
+                                            dateTime={update.createdAt.toISOString()}
+                                            className="text-sm text-slate-500"
+                                        >
+                                            {formatDate(update.createdAt)}
+                                        </time>
+                                    </div>
+
+                                    {update.note ? (
+                                        <p className="mt-3 whitespace-pre-wrap text-sm text-slate-700">
+                                            {update.note}
+                                        </p>
+                                    ) : null}
+                                </li>
+                            ))}
+                        </ol>
+                    ) : (
+                        <div className="mt-4 rounded-lg border border-dashed border-slate-300 p-6 text-center">
+                            <p className="text-sm text-slate-600">
+                                No job history is available.
+                            </p>
+                        </div>
+                    )}
+                </section>
             </section>
-        </section>
-    </main>
+        </main>
     );
 }
 
