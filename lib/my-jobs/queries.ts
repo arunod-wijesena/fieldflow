@@ -1,11 +1,11 @@
 import "server-only";
 
 import { prisma } from "@/lib/db/prisma";
-import { requireSession } from "@/lib/permissions/server";
+import { requireRole, requireSession } from "@/lib/permissions/server";
 import { workOrderIdSchema } from "@/lib/validation/work-order";
 
 export async function listMyJobs() {
-    const session = await requireSession();
+    const session = await requireRole("TECHNICIAN");
 
     try {
         const technicianProfile =
