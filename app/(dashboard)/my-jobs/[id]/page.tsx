@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import { getMyJobById } from "@/lib/my-jobs/queries";
 import { requireRole } from "@/lib/permissions/server";
 import { StartWorkForm } from "@/components/forms/start-work-form";
-import { addMyJobProgressNote, startMyJob } from "@/lib/my-jobs/actions";
+import { addMyJobProgressNote, completeMyJob, startMyJob } from "@/lib/my-jobs/actions";
 import { ProgressNoteForm } from "@/components/forms/progress-note-form";
+import { CompleteJobForm } from "@/components/forms/complete-job-form";
 
 type MyJobDetailsPageProps = {
     params: Promise<{
@@ -101,6 +102,11 @@ export default async function MyJobDetailsPage({
     const startMyJobWithId = startMyJob.bind(null, job.id);
 
     const addMyJobProgressNoteWithId = addMyJobProgressNote.bind(
+        null,
+        job.id,
+    );
+
+    const completeMyJobWithId = completeMyJob.bind(
         null,
         job.id,
     );
@@ -214,19 +220,35 @@ export default async function MyJobDetailsPage({
                 ) : null}
 
                 {job.status === "IN_PROGRESS" ? (
-                    <section className="mt-8 rounded-lg border border-amber-200 bg-amber-50 p-5">
-                        <h2 className="text-lg font-semibold text-amber-900">
-                            Work in progress
-                        </h2>
+                    <div className="mt-8 grid gap-6 lg:grid-cols-2">
+                        <section className="rounded-lg border border-amber-200 bg-amber-50 p-5">
+                            <h2 className="text-lg font-semibold text-amber-900">
+                                Add progress
+                            </h2>
 
-                        <p className="mt-2 text-sm text-amber-800">
-                            Record the work completed, findings, or other operational progress.
-                        </p>
+                            <p className="mt-2 text-sm text-amber-800">
+                                Record work completed, findings, or other operational progress.
+                            </p>
 
-                        <div className="mt-4">
-                            <ProgressNoteForm action={addMyJobProgressNoteWithId} />
-                        </div>
-                    </section>
+                            <div className="mt-4">
+                                <ProgressNoteForm action={addMyJobProgressNoteWithId} />
+                            </div>
+                        </section>
+
+                        <section className="rounded-lg border border-green-200 bg-green-50 p-5">
+                            <h2 className="text-lg font-semibold text-green-900">
+                                Complete job
+                            </h2>
+
+                            <p className="mt-2 text-sm text-green-800">
+                                Add final completion notes before marking the job as completed.
+                            </p>
+
+                            <div className="mt-4">
+                                <CompleteJobForm action={completeMyJobWithId} />
+                            </div>
+                        </section>
+                    </div>
                 ) : null}
 
                 <section className="mt-8">

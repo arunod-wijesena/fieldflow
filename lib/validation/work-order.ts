@@ -181,6 +181,21 @@ export const workOrderProgressNoteSchema = z.object({
         .max(2_000, "Progress note must not exceed 2,000 characters."),
 });
 
+export const workOrderCompletionSchema = z.object({
+    workOrderId: z.string().cuid(
+        "Invalid Work Order identifier.",
+    ),
+
+    completionNotes: z
+        .string()
+        .trim()
+        .min(1, "Completion notes are required.")
+        .max(
+            5_000,
+            "Completion notes must not exceed 5,000 characters.",
+        ),
+});
+
 export type WorkOrderFormInput = z.infer<
     typeof workOrderFormSchema
 >;
