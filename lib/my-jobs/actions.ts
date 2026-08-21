@@ -2,10 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import type { MyJobActionState } from "@/lib/my-jobs/action-state";
+import type { MyJobActionState, MyJobProgressActionState } from "@/lib/my-jobs/action-state";
 import { prisma } from "@/lib/db/prisma";
 import { requireRole } from "@/lib/permissions/server";
-import { workOrderIdSchema } from "@/lib/validation/work-order";
+import { workOrderIdSchema, workOrderProgressNoteSchema } from "@/lib/validation/work-order";
 
 export async function startMyJob(
     workOrderId: string,
@@ -136,6 +136,129 @@ export async function startMyJob(
     revalidatePath("/technicians");
 
     redirect(`/my-jobs/${idResult.data.id}`);
+}
+
+export async function addMyJobProgressNote(
+    workOrderId: string,
+    _previousState: MyJobProgressActionState,
+    formData: FormData,
+): Promise<MyJobProgressActionState> {
+    void _previousState;
+
+    const session = await requireRole("TECHNICIAN");
+    const rawNote = formData.get("note");
+
+    const result = workOrderProgressNoteSchema.safeParse({
+        workOrderId,
+        note: typeof rawNote === "string" ? rawNote : "",
+    });
+
+    if (!result.success) {
+        return {
+            status: "error",
+            message: "Check the progress note.",
+            fieldErrors: {
+                note:
+                    result.error.issues.find(
+                        (issue) => issue.path[0] === "note",
+                    )?.message ?? "Enter a valid progress note.",
+            },
+        };
+    }
+
+    try {
+        await prisma.$transaction(async (transaction) => {
+            const technicianProfile =
+                await transaction.technicianProfile.findUnique({
+                    where: {
+                        userId: session.user.id,
+                    },
+                    select: {
+                        id: true,
+                        user: {
+                            select: {
+                                role: true,
+                            },
+                        },
+                    },
+                });
+
+            if (!technicianProfile) {
+                throw new MyJobOperationError(
+                    "Technician profile not found.",
+                );
+            }
+
+            if (technicianProfile.user.role !== "TECHNICIAN") {
+                throw new MyJobOperationError(
+                    "The signed-in account is not a valid Technician account.",
+                );
+            }
+
+            const workOrder = await transaction.workOrder.findFirst({
+                where: {
+                    id: result.data.workOrderId,
+                    technicianId: technicianProfile.id,
+                },
+                select: {
+                    id: true,
+                    status: true,
+                },
+            });
+
+            if (!workOrder) {
+                throw new MyJobOperationError(
+                    "Assigned job not found.",
+                );
+            }
+
+            if (workOrder.status !== "IN_PROGRESS") {
+                throw new MyJobOperationError(
+                    "Progress notes can only be added to a job in progress.",
+                );
+            }
+
+            await transaction.workOrder.update({
+                where: {
+                    id: workOrder.id,
+                },
+                data: {
+                    status: "IN_PROGRESS",
+                },
+            });
+
+            await transaction.workOrderUpdate.create({
+                data: {
+                    workOrderId: workOrder.id,
+                    authorId: session.user.id,
+                    previousStatus: "IN_PROGRESS",
+                    newStatus: "IN_PROGRESS",
+                    note: result.data.note,
+                },
+            });
+        });
+    } catch (error) {
+        if (error instanceof MyJobOperationError) {
+            return {
+                status: "error",
+                message: error.message,
+                fieldErrors: {},
+            };
+        }
+
+        return {
+            status: "error",
+            message: "Unable to save the progress note. Please try again.",
+            fieldErrors: {},
+        };
+    }
+
+    revalidatePath("/my-jobs");
+    revalidatePath(`/my-jobs/${result.data.workOrderId}`);
+    revalidatePath("/work-orders");
+    revalidatePath(`/work-orders/${result.data.workOrderId}`);
+
+    redirect(`/my-jobs/${result.data.workOrderId}`);
 }
 
 class MyJobOperationError extends Error {

@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { getMyJobById } from "@/lib/my-jobs/queries";
 import { requireRole } from "@/lib/permissions/server";
 import { StartWorkForm } from "@/components/forms/start-work-form";
-import { startMyJob } from "@/lib/my-jobs/actions";
+import { addMyJobProgressNote, startMyJob } from "@/lib/my-jobs/actions";
+import { ProgressNoteForm } from "@/components/forms/progress-note-form";
 
 type MyJobDetailsPageProps = {
     params: Promise<{
@@ -98,6 +99,11 @@ export default async function MyJobDetailsPage({
     const job = result.job;
 
     const startMyJobWithId = startMyJob.bind(null, job.id);
+
+    const addMyJobProgressNoteWithId = addMyJobProgressNote.bind(
+        null,
+        job.id,
+    );
 
     return (
         <main className="p-6">
@@ -214,9 +220,12 @@ export default async function MyJobDetailsPage({
                         </h2>
 
                         <p className="mt-2 text-sm text-amber-800">
-                            Progress-note and completion controls will be added in the next
-                            workflow steps.
+                            Record the work completed, findings, or other operational progress.
                         </p>
+
+                        <div className="mt-4">
+                            <ProgressNoteForm action={addMyJobProgressNoteWithId} />
+                        </div>
                     </section>
                 ) : null}
 
