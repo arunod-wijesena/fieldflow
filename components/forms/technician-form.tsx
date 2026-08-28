@@ -59,7 +59,7 @@ export function TechnicianForm({
         <form action={formAction} className="space-y-6">
             {state.message ? (
                 <div
-                    className="rounded-md bg-red-50 p-3 text-sm text-red-800"
+                    className="break-words rounded-md bg-red-50 p-3 text-sm text-red-800"
                     role="alert"
                 >
                     {state.message}
@@ -67,7 +67,7 @@ export function TechnicianForm({
             ) : null}
 
             {isCreateMode ? (
-                <div>
+                <div className="min-w-0">
                     <label
                         className="mb-1 block text-sm font-medium text-slate-700"
                         htmlFor="userId"
@@ -84,7 +84,7 @@ export function TechnicianForm({
                         aria-describedby={
                             state.fieldErrors.userId ? "userId-error" : undefined
                         }
-                        className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                        className="min-h-11 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                     >
                         <option value="" disabled>
                             Select a Technician account
@@ -100,7 +100,7 @@ export function TechnicianForm({
                     {state.fieldErrors.userId ? (
                         <p
                             id="userId-error"
-                            className="mt-1 text-sm text-red-700"
+                            className="mt-1 break-words text-sm text-red-700"
                             role="alert"
                         >
                             {state.fieldErrors.userId}
@@ -108,13 +108,18 @@ export function TechnicianForm({
                     ) : null}
                 </div>
             ) : linkedAccount ? (
-                <div className="rounded-md bg-slate-50 p-4">
+                <div className="min-w-0 rounded-md bg-slate-50 p-4">
                     <p className="text-sm font-medium text-slate-700">
                         Linked account
                     </p>
 
-                    <p className="mt-1 text-slate-900">{linkedAccount.name}</p>
-                    <p className="text-sm text-slate-600">{linkedAccount.email}</p>
+                    <p className="mt-1 break-words text-slate-900">
+                        {linkedAccount.name}
+                    </p>
+
+                    <p className="break-all text-sm text-slate-600">
+                        {linkedAccount.email}
+                    </p>
 
                     <p className="mt-2 text-xs text-slate-500">
                         The linked account cannot be changed after profile creation.
@@ -122,7 +127,7 @@ export function TechnicianForm({
                 </div>
             ) : null}
 
-            <div>
+            <div className="min-w-0">
                 <label
                     className="mb-1 block text-sm font-medium text-slate-700"
                     htmlFor="skills"
@@ -134,6 +139,7 @@ export function TechnicianForm({
                     id="skills"
                     name="skills"
                     rows={4}
+                    maxLength={1200}
                     defaultValue={defaultValues?.skills?.join(", ") ?? ""}
                     aria-invalid={Boolean(state.fieldErrors.skills)}
                     aria-describedby={
@@ -141,18 +147,21 @@ export function TechnicianForm({
                             ? "skills-error skills-help"
                             : "skills-help"
                     }
-                    className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                    className="w-full min-w-0 resize-y rounded-md border border-slate-300 px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                 />
 
-                <p id="skills-help" className="mt-1 text-sm text-slate-500">
-                    Separate skills with commas, for example: HVAC, Electrical,
-                    Plumbing.
+                <p
+                    id="skills-help"
+                    className="mt-1 break-words text-sm text-slate-500"
+                >
+                    Separate skills with commas or new lines, for example: HVAC,
+                    Electrical, Plumbing.
                 </p>
 
                 {state.fieldErrors.skills ? (
                     <p
                         id="skills-error"
-                        className="mt-1 text-sm text-red-700"
+                        className="mt-1 break-words text-sm text-red-700"
                         role="alert"
                     >
                         {state.fieldErrors.skills}
@@ -160,7 +169,7 @@ export function TechnicianForm({
                 ) : null}
             </div>
 
-            <div>
+            <div className="min-w-0">
                 <label
                     className="mb-1 block text-sm font-medium text-slate-700"
                     htmlFor="availability"
@@ -179,7 +188,7 @@ export function TechnicianForm({
                             ? "availability-error"
                             : undefined
                     }
-                    className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                    className="min-h-11 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                 >
                     {technicianAvailabilityValues.map((value) => (
                         <option key={value} value={value}>
@@ -191,7 +200,7 @@ export function TechnicianForm({
                 {state.fieldErrors.availability ? (
                     <p
                         id="availability-error"
-                        className="mt-1 text-sm text-red-700"
+                        className="mt-1 break-words text-sm text-red-700"
                         role="alert"
                     >
                         {state.fieldErrors.availability}
@@ -202,7 +211,7 @@ export function TechnicianForm({
             <button
                 type="submit"
                 disabled={isPending}
-                className="rounded-md bg-blue-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-11 w-full rounded-md bg-blue-700 px-4 py-2.5 text-sm font-medium text-white outline-none hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
                 {isPending ? "Saving..." : submitLabel}
             </button>

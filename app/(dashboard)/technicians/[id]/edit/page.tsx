@@ -28,22 +28,22 @@ export default async function EditTechnicianPage({
         }
 
         return (
-            <main className="p-6">
-                <section className="mx-auto max-w-3xl rounded-xl bg-white p-6 shadow-sm">
+            <main className="min-w-0 p-4 sm:p-6">
+                <section className="mx-auto max-w-3xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
                     <h1 className="text-2xl font-semibold text-slate-900">
                         Unable to load technician
                     </h1>
 
-                    <p className="mt-2 text-slate-600">
-                        {result.error ??
-                            "The technician profile could not be loaded."}
+                    <p className="mt-2 break-words text-slate-600">
+                        {result.error ?? "The technician profile could not be loaded."}
                     </p>
 
                     <Link
                         href="/technicians"
-                        className="mt-4 inline-block text-sm font-medium text-blue-700 hover:text-blue-800"
+                        className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900"
                     >
-                        Back to technicians
+                        <span aria-hidden="true">←</span>
+                        <span className="ml-1">Back to technicians</span>
                     </Link>
                 </section>
             </main>
@@ -51,21 +51,21 @@ export default async function EditTechnicianPage({
     }
 
     const technician = result.technician;
-
     const updateTechnicianWithId = updateTechnicianProfile.bind(
         null,
         technician.id,
     );
 
     return (
-        <main className="p-6">
-            <section className="mx-auto max-w-3xl rounded-xl bg-white p-6 shadow-sm">
+        <main className="min-w-0 p-4 sm:p-6">
+            <section className="mx-auto max-w-3xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
                 <div className="mb-6">
                     <Link
                         href={`/technicians/${technician.id}`}
-                        className="text-sm font-medium text-blue-700 hover:text-blue-800"
+                        className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900"
                     >
-                        Back to technician
+                        <span aria-hidden="true">←</span>
+                        <span className="ml-1">Back to technician</span>
                     </Link>
 
                     <h1 className="mt-3 text-2xl font-semibold text-slate-900">

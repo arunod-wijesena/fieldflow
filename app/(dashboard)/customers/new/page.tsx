@@ -7,14 +7,15 @@ export default async function NewCustomerPage() {
     await requireAnyRole(["ADMIN", "DISPATCHER"]);
 
     return (
-        <main className="p-6">
-            <section className="mx-auto max-w-3xl rounded-xl bg-white p-6 shadow-sm">
+        <main className="min-w-0 p-4 sm:p-6">
+            <section className="mx-auto max-w-3xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
                 <div className="mb-6">
                     <Link
                         href="/customers"
-                        className="text-sm font-medium text-blue-700 hover:text-blue-800"
+                        className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900"
                     >
-                        ← Back to customers
+                        <span aria-hidden="true">←</span>
+                        <span className="ml-1">Back to customers</span>
                     </Link>
 
                     <h1 className="mt-3 text-2xl font-semibold text-slate-900">
@@ -26,8 +27,8 @@ export default async function NewCustomerPage() {
                     </p>
                 </div>
 
-                <CustomerForm action={createCustomer} submitLabel="Create customer" />
+                <CustomerForm action={createCustomer} submitLabel="Save customer" />
             </section>
         </main>
     );
-}
+}

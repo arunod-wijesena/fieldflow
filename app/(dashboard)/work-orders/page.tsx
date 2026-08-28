@@ -76,19 +76,28 @@ export default async function WorkOrdersPage({
     } = await searchParams;
 
     const [workOrderResult, filterResult] = await Promise.all([
-        listWorkOrders(query, status, priority, technicianId, customerId),
+        listWorkOrders(
+            query,
+            status,
+            priority,
+            technicianId,
+            customerId,
+        ),
         getWorkOrderFilterOptions(),
     ]);
 
-    const hasFilters =
-        query || status || priority || customerId || technicianId;
+    const hasFilters = Boolean(
+        query || status || priority || customerId || technicianId,
+    );
 
     return (
-        <main className="p-6">
-            <section className="mx-auto max-w-7xl rounded-xl bg-white p-6 shadow-sm">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                        <p className="text-sm font-medium text-blue-700">FieldFlow</p>
+        <main className="min-w-0 p-4 sm:p-6">
+            <section className="mx-auto max-w-7xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                        <p className="text-sm font-medium text-blue-700">
+                            FieldFlow
+                        </p>
 
                         <h1 className="mt-1 text-2xl font-semibold text-slate-900">
                             Work Orders
@@ -101,14 +110,14 @@ export default async function WorkOrdersPage({
 
                     <Link
                         href="/work-orders/new"
-                        className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        className="inline-flex min-h-11 items-center justify-center rounded-md bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 sm:w-auto"
                     >
                         Create Work Order
                     </Link>
                 </div>
 
-                <form action="/work-orders" method="GET" className="mt-6 flex flex-wrap items-center gap-4">
-                    <div>
+                <form action="/work-orders" className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[1fr_repeat(4,minmax(0,1fr))_auto_auto]">
+                    <div className="min-w-0">
                         <label className="sr-only" htmlFor="work-order-search">
                             Search Work Orders
                         </label>
@@ -120,11 +129,11 @@ export default async function WorkOrdersPage({
                             defaultValue={query}
                             placeholder="Search title, description, customer, or technician"
                             maxLength={100}
-                            className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                            className="min-h-11 w-full min-w-0 rounded-md border border-slate-300 px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                         />
                     </div>
 
-                    <div>
+                    <div className="min-w-0">
                         <label className="sr-only" htmlFor="status-filter">
                             Filter by status
                         </label>
@@ -133,7 +142,7 @@ export default async function WorkOrdersPage({
                             id="status-filter"
                             name="status"
                             defaultValue={status}
-                            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                            className="min-h-11 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                         >
                             <option value="">All statuses</option>
 
@@ -145,7 +154,7 @@ export default async function WorkOrdersPage({
                         </select>
                     </div>
 
-                    <div>
+                    <div className="min-w-0">
                         <label className="sr-only" htmlFor="priority-filter">
                             Filter by priority
                         </label>
@@ -154,7 +163,7 @@ export default async function WorkOrdersPage({
                             id="priority-filter"
                             name="priority"
                             defaultValue={priority}
-                            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                            className="min-h-11 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                         >
                             <option value="">All priorities</option>
 
@@ -166,7 +175,7 @@ export default async function WorkOrdersPage({
                         </select>
                     </div>
 
-                    <div>
+                    <div className="min-w-0">
                         <label className="sr-only" htmlFor="customer-filter">
                             Filter by Customer
                         </label>
@@ -175,7 +184,7 @@ export default async function WorkOrdersPage({
                             id="customer-filter"
                             name="customerId"
                             defaultValue={customerId}
-                            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                            className="min-h-11 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                         >
                             <option value="">All Customers</option>
 
@@ -187,7 +196,7 @@ export default async function WorkOrdersPage({
                         </select>
                     </div>
 
-                    <div>
+                    <div className="min-w-0">
                         <label className="sr-only" htmlFor="technician-filter">
                             Filter by Technician
                         </label>
@@ -196,7 +205,7 @@ export default async function WorkOrdersPage({
                             id="technician-filter"
                             name="technicianId"
                             defaultValue={technicianId}
-                            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                            className="min-h-11 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                         >
                             <option value="">All Technicians</option>
 
@@ -210,7 +219,7 @@ export default async function WorkOrdersPage({
 
                     <button
                         type="submit"
-                        className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+                        className="min-h-11 w-full rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white outline-none hover:bg-slate-700 focus-visible:ring-2 focus-visible:ring-slate-700 focus-visible:ring-offset-2 xl:w-auto"
                     >
                         Apply
                     </button>
@@ -218,7 +227,7 @@ export default async function WorkOrdersPage({
                     {hasFilters ? (
                         <Link
                             href="/work-orders"
-                            className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                            className="inline-flex min-h-11 items-center justify-center rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 xl:w-auto"
                         >
                             Clear
                         </Link>
@@ -227,7 +236,7 @@ export default async function WorkOrdersPage({
 
                 {filterResult.error ? (
                     <div
-                        className="mt-6 rounded-md bg-red-50 p-4 text-sm text-red-800"
+                        className="mt-6 break-words rounded-md bg-red-50 p-4 text-sm text-red-800"
                         role="alert"
                     >
                         {filterResult.error}
@@ -236,7 +245,7 @@ export default async function WorkOrdersPage({
 
                 {workOrderResult.error ? (
                     <div
-                        className="mt-6 rounded-md bg-red-50 p-4 text-sm text-red-800"
+                        className="mt-6 break-words rounded-md bg-red-50 p-4 text-sm text-red-800"
                         role="alert"
                     >
                         {workOrderResult.error}
@@ -244,9 +253,11 @@ export default async function WorkOrdersPage({
                 ) : null}
 
                 {!workOrderResult.error && workOrderResult.workOrders.length === 0 ? (
-                    <div className="mt-8 rounded-lg border border-dashed border-slate-300 p-8 text-center">
+                    <div className="mt-8 rounded-lg border border-dashed border-slate-300 p-6 text-center sm:p-8">
                         <h2 className="text-lg font-semibold text-slate-900">
-                            {hasFilters ? "No matching Work Orders" : "No Work Orders yet"}
+                            {hasFilters
+                                ? "No matching Work Orders"
+                                : "No Work Orders yet"}
                         </h2>
 
                         <p className="mt-2 text-sm text-slate-600">
@@ -258,7 +269,7 @@ export default async function WorkOrdersPage({
                         {!hasFilters ? (
                             <Link
                                 href="/work-orders/new"
-                                className="mt-4 inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                                className="mt-4 inline-flex min-h-11 items-center justify-center rounded-md bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 sm:w-auto"
                             >
                                 Create Work Order
                             </Link>
@@ -267,121 +278,128 @@ export default async function WorkOrdersPage({
                 ) : null}
 
                 {!workOrderResult.error && workOrderResult.workOrders.length > 0 ? (
-                    <div className="mt-8 overflow-x-auto">
-                        <table className="min-w-full divide-y divide-slate-200">
-                            <thead className="bg-slate-50">
-                                <tr>
-                                    <TableHeader>Work Order</TableHeader>
-                                    <TableHeader>Customer</TableHeader>
-                                    <TableHeader>Technician</TableHeader>
-                                    <TableHeader>Status</TableHeader>
-                                    <TableHeader>Priority</TableHeader>
-                                    <TableHeader>Schedule</TableHeader>
-                                    <TableHeader>
-                                        <span className="sr-only">Actions</span>
-                                    </TableHeader>
-                                </tr>
-                            </thead>
+                    <>
+                        <p className="mt-6 text-xs text-slate-500 sm:hidden">
+                            Scroll horizontally to view all Work Order columns.
+                        </p>
 
-                            <tbody className="divide-y divide-slate-200 bg-white">
-                                {workOrderResult.workOrders.map((workOrder) => (
-                                    <tr key={workOrder.id}>
-                                        <TableCell>
-                                            <Link
-                                                href={`/work-orders/${workOrder.id}`}
-                                                className="font-medium text-blue-600 hover:underline"
-                                            >
-                                                {workOrder.title}
-                                            </Link>
+                        <div className="mt-3 max-w-full overflow-x-auto rounded-lg border border-slate-200 sm:mt-8">
+                            <table className="min-w-[1100px] divide-y divide-slate-200">
+                                <thead className="bg-slate-50">
+                                    <tr>
+                                        <TableHeader>Work Order</TableHeader>
+                                        <TableHeader>Customer</TableHeader>
+                                        <TableHeader>Technician</TableHeader>
+                                        <TableHeader>Status</TableHeader>
+                                        <TableHeader>Priority</TableHeader>
+                                        <TableHeader>Schedule</TableHeader>
+                                        <TableHeader>
+                                            <span className="sr-only">Actions</span>
+                                        </TableHeader>
+                                    </tr>
+                                </thead>
 
-                                            <p className="mt-1 text-xs text-slate-500">
-                                                Created by {workOrder.createdBy.name}
-                                            </p>
-                                        </TableCell>
-
-                                        <TableCell>
-                                            <Link
-                                                href={`/customers/${workOrder.customer.id}`}
-                                                className="text-slate-900 hover:underline"
-                                            >
-                                                {workOrder.customer.name}
-                                            </Link>
-
-                                            <p className="mt-1 text-xs text-slate-500">
-                                                {workOrder.customer.city}
-                                            </p>
-                                        </TableCell>
-
-                                        <TableCell>
-                                            {workOrder.technician ? (
-                                                <>
-                                                    <Link
-                                                        href={`/technicians/${workOrder.technician.id}`}
-                                                        className="text-slate-900 hover:underline"
-                                                    >
-                                                        {workOrder.technician.user.name}
-                                                    </Link>
-
-                                                    <p className="mt-1 text-xs text-slate-500">
-                                                        {workOrder.technician.availability}
-                                                    </p>
-                                                </>
-                                            ) : (
-                                                <span className="text-slate-500">Unassigned</span>
-                                            )}
-                                        </TableCell>
-
-                                        <TableCell>
-                                            <span
-                                                className={`rounded-full px-3 py-1 text-xs font-medium ${
-                                                    statusStyles[workOrder.status]
-                                                }`}
-                                            >
-                                                {statusLabels[workOrder.status]}
-                                            </span>
-                                        </TableCell>
-
-                                        <TableCell>
-                                            <span
-                                                className={`rounded-full px-3 py-1 text-xs font-medium ${
-                                                    priorityStyles[workOrder.priority]
-                                                }`}
-                                            >
-                                                {priorityLabels[workOrder.priority]}
-                                            </span>
-                                        </TableCell>
-
-                                        <TableCell>
-                                            <p>{formatDate(workOrder.scheduledStart)}</p>
-                                            {workOrder.scheduledEnd ? (
-                                                <p className="mt-1 text-xs text-slate-500">
-                                                    Ends {formatDate(workOrder.scheduledEnd)}
-                                                </p>
-                                            ) : null}
-                                        </TableCell>
-
-                                        <TableCell>
-                                            <div className="flex justify-end gap-3">
+                                <tbody className="divide-y divide-slate-200 bg-white">
+                                    {workOrderResult.workOrders.map((workOrder) => (
+                                        <tr key={workOrder.id}>
+                                            <TableCell>
                                                 <Link
                                                     href={`/work-orders/${workOrder.id}`}
-                                                    className="font-medium text-blue-600 hover:underline"
+                                                    className="font-medium text-blue-700 hover:underline"
                                                 >
-                                                    View
+                                                    {workOrder.title}
                                                 </Link>
 
+                                                <p className="mt-1 max-w-xs break-words text-xs text-slate-500">
+                                                    Created by {workOrder.createdBy.name}
+                                                </p>
+                                            </TableCell>
+
+                                            <TableCell>
                                                 <Link
-                                                    href={`/work-orders/${workOrder.id}/edit`}
-                                                    className="font-medium text-slate-600 hover:underline"
+                                                    href={`/customers/${workOrder.customer.id}`}
+                                                    className="text-slate-900 hover:underline"
                                                 >
-                                                    Edit
+                                                    {workOrder.customer.name}
                                                 </Link>
-                                            </div>
-                                        </TableCell>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+
+                                                <p className="mt-1 break-words text-xs text-slate-500">
+                                                    {workOrder.customer.city}
+                                                </p>
+                                            </TableCell>
+
+                                            <TableCell>
+                                                {workOrder.technician ? (
+                                                    <>
+                                                        <Link
+                                                            href={`/technicians/${workOrder.technician.id}`}
+                                                            className="text-slate-900 hover:underline"
+                                                        >
+                                                            {workOrder.technician.user.name}
+                                                        </Link>
+
+                                                        <p className="mt-1 text-xs text-slate-500">
+                                                            {workOrder.technician.availability}
+                                                        </p>
+                                                    </>
+                                                ) : (
+                                                    <span className="text-slate-500">
+                                                        Unassigned
+                                                    </span>
+                                                )}
+                                            </TableCell>
+
+                                            <TableCell>
+                                                <span
+                                                    className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${statusStyles[workOrder.status]
+                                                        }`}
+                                                >
+                                                    {statusLabels[workOrder.status]}
+                                                </span>
+                                            </TableCell>
+
+                                            <TableCell>
+                                                <span
+                                                    className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${priorityStyles[workOrder.priority]
+                                                        }`}
+                                                >
+                                                    {priorityLabels[workOrder.priority]}
+                                                </span>
+                                            </TableCell>
+
+                                            <TableCell>
+                                                <p>{formatDate(workOrder.scheduledStart)}</p>
+
+                                                {workOrder.scheduledEnd ? (
+                                                    <p className="mt-1 text-xs text-slate-500">
+                                                        Ends {formatDate(workOrder.scheduledEnd)}
+                                                    </p>
+                                                ) : null}
+                                            </TableCell>
+
+                                            <TableCell>
+                                                <div className="flex justify-end gap-3">
+                                                    <Link
+                                                        href={`/work-orders/${workOrder.id}`}
+                                                        className="font-medium text-blue-700 hover:underline"
+                                                    >
+                                                        View
+                                                    </Link>
+
+                                                    <Link
+                                                        href={`/work-orders/${workOrder.id}/edit`}
+                                                        className="font-medium text-slate-600 hover:text-slate-900"
+                                                    >
+                                                        Edit
+                                                    </Link>
+                                                </div>
+                                            </TableCell>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </>
                 ) : null}
             </section>
         </main>

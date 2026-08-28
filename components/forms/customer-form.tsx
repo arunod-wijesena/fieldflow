@@ -1,7 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
-import { initialCustomerActionState, type CustomerActionState, } from "@/lib/customers/action-state";
+import {
+    initialCustomerActionState,
+    type CustomerActionState,
+} from "@/lib/customers/action-state";
 
 type CustomerFormValues = {
     name?: string;
@@ -36,19 +39,19 @@ export function CustomerForm({
         <form action={formAction} className="space-y-6">
             {state.message ? (
                 <div
-                    className="rounded-md bg-red-50 p-3 text-sm text-red-800"
+                    className="break-words rounded-md bg-red-50 p-3 text-sm text-red-800"
                     role="alert"
                 >
                     {state.message}
                 </div>
-            ) : null
-            }
+            ) : null}
 
             <CustomerField
                 id="name"
                 label="Customer name"
                 defaultValue={defaultValues?.name}
                 error={state.fieldErrors.name}
+                autoComplete="organization"
                 required
             />
 
@@ -112,11 +115,11 @@ export function CustomerForm({
             <button
                 type="submit"
                 disabled={isPending}
-                className="rounded-md bg-blue-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-11 w-full rounded-md bg-blue-700 px-4 py-2.5 text-sm font-medium text-white outline-none hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
                 {isPending ? "Saving..." : submitLabel}
             </button>
-        </form >
+        </form>
     );
 }
 
@@ -142,7 +145,7 @@ function CustomerField({
     const errorId = `${id}-error`;
 
     return (
-        <div>
+        <div className="min-w-0">
             <label
                 className="mb-1 block text-sm font-medium text-slate-700"
                 htmlFor={id}
@@ -160,11 +163,15 @@ function CustomerField({
                 required={required}
                 aria-invalid={Boolean(error)}
                 aria-describedby={error ? errorId : undefined}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                className="min-h-11 w-full min-w-0 rounded-md border border-slate-300 px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
             />
 
             {error ? (
-                <p id={errorId} className="mt-1 text-sm text-red-700" role="alert">
+                <p
+                    id={errorId}
+                    className="mt-1 break-words text-sm text-red-700"
+                    role="alert"
+                >
                     {error}
                 </p>
             ) : null}

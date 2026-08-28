@@ -28,21 +28,22 @@ export default async function EditCustomerPage({
         }
 
         return (
-            <main className="p-6">
-                <section className="mx-auto max-w-3xl rounded-xl bg-white p-6 shadow-sm">
+            <main className="min-w-0 p-4 sm:p-6">
+                <section className="mx-auto max-w-3xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
                     <h1 className="text-2xl font-semibold text-slate-900">
                         Unable to load customer
                     </h1>
 
-                    <p className="mt-2 text-slate-600">
+                    <p className="mt-2 break-words text-slate-600">
                         {result.error ?? "The customer could not be loaded."}
                     </p>
 
                     <Link
                         href="/customers"
-                        className="text-sm font-medium text-blue-700 hover:text-blue-800"
+                        className="inline-flex items-center text-sm font-medium text-blue-700 hover:underline"
                     >
-                        ← Back to customers
+                        <span aria-hidden="true">←</span>
+                        <span className="ml-1">Back to customers</span>
                     </Link>
                 </section>
             </main>
@@ -53,14 +54,15 @@ export default async function EditCustomerPage({
     const updateCustomerWithId = updateCustomer.bind(null, customer.id);
 
     return (
-        <main className="p-6">
-            <section className="mx-auto max-w-3xl rounded-xl bg-white p-6 shadow-sm">
+        <main className="min-w-0 p-4 sm:p-6">
+            <section className="mx-auto max-w-3xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
                 <div className="mb-6">
                     <Link
                         href={`/customers/${customer.id}`}
-                        className="text-sm font-medium text-blue-700 hover:text-blue-800"
+                        className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900"
                     >
-                        ← Back to customer
+                        <span aria-hidden="true">←</span>
+                        <span className="ml-1">Back to customer</span>
                     </Link>
 
                     <h1 className="mt-3 text-2xl font-semibold text-slate-900">
@@ -74,7 +76,7 @@ export default async function EditCustomerPage({
 
                 <CustomerForm
                     action={updateCustomerWithId}
-                    submitLabel="Save changes"
+                    submitLabel="Update customer"
                     defaultValues={customer}
                 />
             </section>
