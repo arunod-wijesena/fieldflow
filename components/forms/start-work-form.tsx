@@ -13,17 +13,19 @@ type StartWorkFormProps = {
     ) => Promise<MyJobActionState>;
 };
 
-export function StartWorkForm({ action }: StartWorkFormProps) {
+export function StartWorkForm({
+    action,
+}: StartWorkFormProps) {
     const [state, formAction, isPending] = useActionState(
         action,
         initialMyJobActionState,
     );
 
     return (
-        <form action={formAction}>
+        <form action={formAction} className="min-w-0 space-y-4">
             {state.message ? (
                 <div
-                    className="rounded-md bg-red-50 p-3 text-sm text-red-800"
+                    className="break-words rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-800"
                     role="alert"
                 >
                     {state.message}
@@ -33,7 +35,7 @@ export function StartWorkForm({ action }: StartWorkFormProps) {
             <button
                 type="submit"
                 disabled={isPending}
-                className="rounded-md bg-blue-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-11 w-full rounded-md bg-blue-700 px-4 py-2.5 text-sm font-medium text-white outline-none hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >
                 {isPending ? "Starting work..." : "Start Work"}
             </button>

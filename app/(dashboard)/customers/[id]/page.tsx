@@ -13,6 +13,14 @@ function displayOptionalValue(value: string | null) {
     return value ?? "Not provided";
 }
 
+function formatDate(value: Date) {
+    return new Intl.DateTimeFormat("en", {
+        dateStyle: "medium",
+        timeStyle: "short",
+        timeZone: "UTC",
+    }).format(value);
+}
+
 export default async function CustomerDetailsPage({
     params,
 }: CustomerDetailsPageProps) {
@@ -30,19 +38,19 @@ export default async function CustomerDetailsPage({
         }
 
         return (
-            <main className="p-6">
-                <section className="mx-auto max-w-3xl rounded-xl bg-white p-6 shadow-sm">
+            <main className="min-w-0 p-4 sm:p-6">
+                <section className="mx-auto max-w-3xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
                     <h1 className="text-2xl font-semibold text-slate-900">
                         Unable to load customer
                     </h1>
 
-                    <p className="mt-2 text-slate-600">
+                    <p className="mt-2 break-words text-slate-600">
                         {result.error ?? "The customer could not be loaded."}
                     </p>
 
                     <Link
                         href="/customers"
-                        className="mt-4 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500"
+                        className="inline-flex items-center text-sm font-medium text-blue-700 hover:underline"
                     >
                         Back to customers
                     </Link>
@@ -54,18 +62,19 @@ export default async function CustomerDetailsPage({
     const customer = result.customer;
 
     return (
-        <main className="p-6">
-            <section className="mx-auto max-w-3xl rounded-xl bg-white p-6 shadow-sm">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div>
+        <main className="min-w-0 p-4 sm:p-6">
+            <section className="mx-auto max-w-3xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
                         <Link
                             href="/customers"
-                            className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                            className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900"
                         >
-                            Back to customers
+                            <span aria-hidden="true">←</span>
+                            <span className="ml-1">Back to customers</span>
                         </Link>
 
-                        <h1 className="mt-3 text-2xl font-semibold text-slate-900">
+                        <h1 className="mt-3 break-words text-2xl font-semibold text-slate-900">
                             {customer.name}
                         </h1>
 
@@ -76,7 +85,7 @@ export default async function CustomerDetailsPage({
 
                     <Link
                         href={`/customers/${customer.id}/edit`}
-                        className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-500"
+                        className="inline-flex min-h-11 items-center justify-center rounded-md bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 sm:w-auto"
                     >
                         Edit customer
                     </Link>
@@ -86,6 +95,7 @@ export default async function CustomerDetailsPage({
                     <CustomerDetail
                         label="Email"
                         value={displayOptionalValue(customer.email)}
+                        breakAll
                     />
 
                     <CustomerDetail
@@ -109,17 +119,17 @@ export default async function CustomerDetailsPage({
                 </dl>
 
                 <div className="mt-8 border-t border-slate-200 pt-6 text-sm text-slate-500">
-                    <p>
+                    <p className="break-words">
                         Created:{" "}
                         <time dateTime={customer.createdAt.toISOString()}>
-                            {customer.createdAt.toLocaleString()}
+                            {formatDate(customer.createdAt)}
                         </time>
                     </p>
 
-                    <p className="mt-1">
+                    <p className="mt-1 break-words">
                         Last updated:{" "}
                         <time dateTime={customer.updatedAt.toISOString()}>
-                            {customer.updatedAt.toLocaleString()}
+                            {formatDate(customer.updatedAt)}
                         </time>
                     </p>
                 </div>
@@ -131,13 +141,24 @@ export default async function CustomerDetailsPage({
 type CustomerDetailProps = {
     label: string;
     value: string;
+    breakAll?: boolean;
 };
 
-function CustomerDetail({ label, value }: CustomerDetailProps) {
+function CustomerDetail({
+    label,
+    value,
+    breakAll = false,
+}: CustomerDetailProps) {
     return (
-        <div>
+        <div className="min-w-0">
             <dt className="text-sm font-medium text-slate-500">{label}</dt>
-            <dd className="mt-1 break-words text-slate-900">{value}</dd>
+
+            <dd
+                className={`mt-1 text-slate-900 ${breakAll ? "break-all" : "break-words"
+                    }`}
+            >
+                {value}
+            </dd>
         </div>
     );
 }

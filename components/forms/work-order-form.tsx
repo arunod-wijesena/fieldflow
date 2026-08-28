@@ -2,91 +2,91 @@
 
 import { useActionState } from "react";
 import {
-    initialWorkOrderActionState,
-    type WorkOrderActionState,
+  initialWorkOrderActionState,
+  type WorkOrderActionState,
 } from "@/lib/work-orders/action-state";
 import { workOrderPriorityValues } from "@/lib/validation/work-order";
 
 type CustomerOption = {
-    id: string;
-    name: string;
-    city: string;
-    postcode: string;
+  id: string;
+  name: string;
+  city: string;
+  postcode: string;
 };
 
 type TechnicianOption = {
-    id: string;
-    skills: string[];
-    availability: "AVAILABLE" | "BUSY" | "UNAVAILABLE";
-    user: {
-        name: string;
-        email: string;
-        role: string;
-    };
-    _count: {
-        workOrders: number;
-    };
+  id: string;
+  skills: string[];
+  availability: "AVAILABLE" | "BUSY" | "UNAVAILABLE";
+  user: {
+    name: string;
+    email: string;
+    role: string;
+  };
+  _count: {
+    workOrders: number;
+  };
 };
 
 type WorkOrderFormValues = {
-    title?: string;
-    description?: string;
-    priority?: (typeof workOrderPriorityValues)[number];
-    customerId?: string;
-    technicianId?: string | null;
-    scheduledStart?: string | null;
-    scheduledEnd?: string | null;
+  title?: string;
+  description?: string;
+  priority?: (typeof workOrderPriorityValues)[number];
+  customerId?: string;
+  technicianId?: string | null;
+  scheduledStart?: string | null;
+  scheduledEnd?: string | null;
 };
 
 type WorkOrderFormProps = {
-    action: (
-        previousState: WorkOrderActionState,
-        formData: FormData,
-    ) => Promise<WorkOrderActionState>;
-    customers: CustomerOption[];
-    technicians: TechnicianOption[];
-    submitLabel: string;
-    defaultValues?: WorkOrderFormValues;
+  action: (
+    previousState: WorkOrderActionState,
+    formData: FormData,
+  ) => Promise<WorkOrderActionState>;
+  customers: CustomerOption[];
+  technicians: TechnicianOption[];
+  submitLabel: string;
+  defaultValues?: WorkOrderFormValues;
 };
 
 const priorityLabels = {
-    LOW: "Low",
-    MEDIUM: "Medium",
-    HIGH: "High",
-    URGENT: "Urgent",
+  LOW: "Low",
+  MEDIUM: "Medium",
+  HIGH: "High",
+  URGENT: "Urgent",
 } satisfies Record<
-    (typeof workOrderPriorityValues)[number],
-    string
+  (typeof workOrderPriorityValues)[number],
+  string
 >;
 
 const availabilityLabels = {
-    AVAILABLE: "Available",
-    BUSY: "Busy",
-    UNAVAILABLE: "Unavailable",
+  AVAILABLE: "Available",
+  BUSY: "Busy",
+  UNAVAILABLE: "Unavailable",
 } satisfies Record<TechnicianOption["availability"], string>;
 
 export function WorkOrderForm({
-    action,
-    customers,
-    technicians,
-    submitLabel,
-    defaultValues,
+  action,
+  customers,
+  technicians,
+  submitLabel,
+  defaultValues,
 }: WorkOrderFormProps) {
-    const [state, formAction, isPending] = useActionState(
-        action,
-        initialWorkOrderActionState,
-    );
+  const [state, formAction, isPending] = useActionState(
+    action,
+    initialWorkOrderActionState,
+  );
 
-    return (
-        <form action={formAction} className="space-y-6">
-            {state.message ? (
-                <div
-                    className="rounded-md bg-red-50 p-3 text-sm text-red-800"
-                    role="alert"
-                >
-                    {state.message}
-                </div>
-            ) : null}
+  return (
+    <form action={formAction} className="space-y-6">
+      {state.message ? (
+        <div
+          className="break-words rounded-md bg-red-50 p-3 text-sm text-red-800"
+          role="alert"
+        >
+          {state.message}
+        </div>
+      ) : null}
 
       <WorkOrderField
         id="title"
@@ -97,7 +97,7 @@ export function WorkOrderForm({
         required
       />
 
-      <div>
+      <div className="min-w-0">
         <label
           className="mb-1 block text-sm font-medium text-slate-700"
           htmlFor="description"
@@ -118,7 +118,7 @@ export function WorkOrderForm({
               ? "description-error"
               : undefined
           }
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+          className="w-full min-w-0 resize-y rounded-md border border-slate-300 px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
         />
 
         {state.fieldErrors.description ? (
@@ -130,7 +130,7 @@ export function WorkOrderForm({
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <div>
+        <div className="min-w-0">
           <label
             className="mb-1 block text-sm font-medium text-slate-700"
             htmlFor="priority"
@@ -145,9 +145,11 @@ export function WorkOrderForm({
             defaultValue={defaultValues?.priority ?? "MEDIUM"}
             aria-invalid={Boolean(state.fieldErrors.priority)}
             aria-describedby={
-              state.fieldErrors.priority ? "priority-error" : undefined
+              state.fieldErrors.priority
+                ? "priority-error"
+                : undefined
             }
-            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+            className="min-h-11 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
           >
             {workOrderPriorityValues.map((priority) => (
               <option key={priority} value={priority}>
@@ -164,7 +166,7 @@ export function WorkOrderForm({
           ) : null}
         </div>
 
-        <div>
+        <div className="min-w-0">
           <label
             className="mb-1 block text-sm font-medium text-slate-700"
             htmlFor="customerId"
@@ -183,7 +185,7 @@ export function WorkOrderForm({
                 ? "customerId-error"
                 : undefined
             }
-            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+            className="min-h-11 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
           >
             <option value="" disabled>
               Select a Customer
@@ -191,7 +193,8 @@ export function WorkOrderForm({
 
             {customers.map((customer) => (
               <option key={customer.id} value={customer.id}>
-                {customer.name} ({customer.city}, {customer.postcode})
+                {customer.name} ({customer.city},{" "}
+                {customer.postcode})
               </option>
             ))}
           </select>
@@ -205,7 +208,7 @@ export function WorkOrderForm({
         </div>
       </div>
 
-      <div>
+      <div className="min-w-0">
         <label
           className="mb-1 block text-sm font-medium text-slate-700"
           htmlFor="technicianId"
@@ -223,7 +226,7 @@ export function WorkOrderForm({
               ? "technicianId-error technician-help"
               : "technician-help"
           }
-          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+          className="min-h-11 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
         >
           <option value="">Leave unassigned</option>
 
@@ -240,9 +243,12 @@ export function WorkOrderForm({
           ))}
         </select>
 
-        <p id="technician-help" className="mt-1 text-sm text-slate-500">
-          Unavailable Technicians cannot be assigned. Busy Technicians remain
-          selectable with their active workload shown.
+        <p
+          id="technician-help"
+          className="mt-1 break-words text-sm text-slate-500"
+        >
+          Unavailable Technicians cannot be assigned. Busy Technicians
+          remain selectable with their active workload shown.
         </p>
 
         {state.fieldErrors.technicianId ? (
@@ -274,73 +280,81 @@ export function WorkOrderForm({
       <button
         type="submit"
         disabled={isPending}
-        className="rounded-md bg-blue-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+        className="min-h-11 w-full rounded-md bg-blue-700 px-4 py-2.5 text-sm font-medium text-white outline-none hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {isPending ? "Saving..." : submitLabel}
       </button>
-    </form >
+    </form>
   );
 }
 
 type WorkOrderFieldProps = {
-    id: "title" | "scheduledStart" | "scheduledEnd";
-    label: string;
-    type?: "text" | "datetime-local";
-    defaultValue?: string | null;
-    error?: string;
-    maxLength?: number;
-    required?: boolean;
+  id: "title" | "scheduledStart" | "scheduledEnd";
+  label: string;
+  type?: "text" | "datetime-local";
+  defaultValue?: string | null;
+  error?: string;
+  maxLength?: number;
+  required?: boolean;
 };
 
 function WorkOrderField({
-    id,
-    label,
-    type = "text",
-    defaultValue,
-    error,
-    maxLength,
-    required = false,
+  id,
+  label,
+  type = "text",
+  defaultValue,
+  error,
+  maxLength,
+  required = false,
 }: WorkOrderFieldProps) {
-    const errorId = `${id}-error`;
+  const errorId = `${id}-error`;
 
-    return (
-        <div>
-            <label
-                className="mb-1 block text-sm font-medium text-slate-700"
-                htmlFor={id}
-            >
-                {label}
-                {required ? <span aria-hidden="true"> *</span> : null}
-            </label>
+  return (
+    <div className="min-w-0">
+      <label
+        className="mb-1 block text-sm font-medium text-slate-700"
+        htmlFor={id}
+      >
+        {label}
+        {required ? <span aria-hidden="true"> *</span> : null}
+      </label>
 
-            <input
-                id={id}
-                name={id}
-                type={type}
-                required={required}
-                maxLength={maxLength}
-                defaultValue={defaultValue ?? ""}
-                aria-invalid={Boolean(error)}
-                aria-describedby={error ? errorId : undefined}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
-            />
+      <input
+        id={id}
+        name={id}
+        type={type}
+        required={required}
+        maxLength={maxLength}
+        defaultValue={defaultValue ?? ""}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? errorId : undefined}
+        className="min-h-11 w-full min-w-0 rounded-md border border-slate-300 px-3 py-2 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+      />
 
-            {error ? <FieldError id={errorId} message={error} /> : null}
-        </div>
-    );
+      {error ? (
+        <FieldError id={errorId} message={error} />
+      ) : null}
+    </div>
+  );
 }
 
 type FieldErrorProps = {
-    id: string;
-    message?: string;
+  id: string;
+  message?: string;
 };
 
 function FieldError({ id, message }: FieldErrorProps) {
-    if (!message) return null;
+  if (!message) {
+    return null;
+  }
 
-    return (
-        <p id={id} className="mt-1 text-sm text-red-700" role="alert">
-            {message}
-        </p>
-    );
+  return (
+    <p
+      id={id}
+      className="mt-1 break-words text-sm text-red-700"
+      role="alert"
+    >
+      {message}
+    </p>
+  );
 }

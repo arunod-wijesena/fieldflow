@@ -50,23 +50,25 @@ export default async function MyJobsPage() {
     const result = await listMyJobs();
 
     return (
-        <main className="p-6">
-            <section className="mx-auto max-w-6xl rounded-xl bg-white p-6 shadow-sm">
-                <div>
-                    <p className="text-sm font-medium text-blue-700">FieldFlow</p>
+        <main className="min-w-0 p-4 sm:p-6">
+            <section className="mx-auto max-w-6xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
+                <div className="min-w-0">
+                    <p className="text-sm font-medium text-blue-700">
+                        FieldFlow
+                    </p>
 
                     <h1 className="mt-1 text-2xl font-semibold text-slate-900">
                         My Jobs
                     </h1>
 
-                    <p className="mt-2 text-sm text-slate-600">
+                    <p className="mt-2 break-words text-sm text-slate-600">
                         View assigned work and jobs currently in progress.
                     </p>
                 </div>
 
                 {result.error ? (
                     <div
-                        className="mt-6 rounded-md bg-red-50 p-4 text-sm text-red-800"
+                        className="mt-6 break-words rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-800"
                         role="alert"
                     >
                         {result.error}
@@ -74,26 +76,27 @@ export default async function MyJobsPage() {
                 ) : null}
 
                 {!result.error && result.jobs.length === 0 ? (
-                    <div className="mt-8 rounded-lg border border-dashed border-slate-300 p-8 text-center">
+                    <div className="mt-8 rounded-lg border border-dashed border-slate-300 p-6 text-center sm:p-8">
                         <h2 className="text-lg font-semibold text-slate-900">
                             No active jobs
                         </h2>
 
                         <p className="mt-2 text-sm text-slate-600">
-                            No assigned or in-progress Work Orders are currently available.
+                            No assigned or in-progress Work Orders are currently
+                            available.
                         </p>
                     </div>
                 ) : null}
 
                 {!result.error && result.jobs.length > 0 ? (
-                    <div className="mt-8 grid gap-5 lg:grid-cols-2">
+                    <div className="mt-8 grid gap-5 xl:grid-cols-2">
                         {result.jobs.map((job) => (
                             <article
                                 key={job.id}
-                                className="rounded-xl border border-slate-200 p-5"
+                                className="min-w-0 rounded-xl border border-slate-200 p-4 sm:p-5"
                             >
-                                <div className="flex flex-wrap items-start justify-between gap-3">
-                                    <div>
+                                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                                    <div className="min-w-0">
                                         <Link
                                             href={`/my-jobs/${job.id}`}
                                             className="text-lg font-semibold text-slate-900 hover:text-blue-600"
@@ -101,60 +104,60 @@ export default async function MyJobsPage() {
                                             {job.title}
                                         </Link>
 
-                                        <p className="mt-1 text-sm text-slate-600">
+                                        <p className="mt-1 break-words text-sm text-slate-600">
                                             {job.customer.name}
                                         </p>
                                     </div>
 
-                                    <div className="flex flex-wrap gap-2">
+                                    <div className="flex shrink-0 flex-wrap gap-2">
                                         <span
-                                            className={`rounded-full px-3 py-1 text-xs font-medium ${
-                                                statusStyles[job.status]
-                                            }`}
+                                            className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${statusStyles[job.status]
+                                                }`}
                                         >
                                             {statusLabels[job.status]}
                                         </span>
 
                                         <span
-                                            className={`rounded-full px-3 py-1 text-xs font-medium ${
-                                                priorityStyles[job.priority]
-                                            }`}
+                                            className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${priorityStyles[job.priority]
+                                                }`}
                                         >
                                             {priorityLabels[job.priority]}
                                         </span>
                                     </div>
                                 </div>
 
-                                <p className="mt-4 line-clamp-3 whitespace-pre-wrap text-sm text-slate-700">
+                                <p className="mt-4 line-clamp-3 whitespace-pre-wrap break-words text-sm text-slate-700">
                                     {job.description}
                                 </p>
 
                                 <dl className="mt-5 grid gap-4 sm:grid-cols-2">
-                                    <div>
+                                    <div className="min-w-0">
                                         <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">
                                             Scheduled start
                                         </dt>
-                                        <dd className="mt-1 text-sm text-slate-900">
+
+                                        <dd className="mt-1 break-words text-sm text-slate-900">
                                             {formatDate(job.scheduledStart)}
                                         </dd>
                                     </div>
 
-                                    <div>
+                                    <div className="min-w-0">
                                         <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">
                                             Scheduled end
                                         </dt>
-                                        <dd className="mt-1 text-sm text-slate-900">
+
+                                        <dd className="mt-1 break-words text-sm text-slate-900">
                                             {formatDate(job.scheduledEnd)}
                                         </dd>
                                     </div>
                                 </dl>
 
-                                <div className="mt-5 rounded-md bg-slate-50 p-4">
+                                <div className="mt-5 min-w-0 rounded-md bg-slate-50 p-4">
                                     <p className="text-sm font-medium text-slate-900">
                                         Service location
                                     </p>
 
-                                    <address className="mt-1 not-italic text-sm leading-6 text-slate-600">
+                                    <address className="mt-1 break-words not-italic text-sm leading-6 text-slate-600">
                                         <span className="block">
                                             {job.customer.addressLine1}
                                         </span>
@@ -172,23 +175,26 @@ export default async function MyJobsPage() {
                                 </div>
 
                                 {job.updates[0]?.note ? (
-                                    <div className="mt-4">
+                                    <div className="mt-4 min-w-0">
                                         <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
                                             Latest update
                                         </p>
 
-                                        <p className="mt-1 text-sm text-slate-700">
+                                        <p className="mt-1 whitespace-pre-wrap break-words text-sm text-slate-700">
                                             {job.updates[0].note}
                                         </p>
                                     </div>
                                 ) : null}
 
-                                <div className="mt-5 border-t border-slate-200 pt-4 text-right">
+                                <div className="mt-5 border-t border-slate-200 pt-4">
                                     <Link
                                         href={`/my-jobs/${job.id}`}
                                         className="inline-flex text-sm font-medium text-blue-700 hover:underline"
                                     >
-                                        View job &rarr;
+                                        View job
+                                        <span className="ml-1" aria-hidden="true">
+                                            →
+                                        </span>
                                     </Link>
                                 </div>
                             </article>

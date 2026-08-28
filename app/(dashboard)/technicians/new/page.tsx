@@ -10,29 +10,30 @@ export default async function NewTechnicianPage() {
     const result = await listEligibleTechnicianAccounts();
 
     return (
-        <main className="p-6">
-            <section className="mx-auto max-w-3xl rounded-xl bg-white p-6 shadow-sm">
+        <main className="min-w-0 p-4 sm:p-6">
+            <section className="mx-auto max-w-3xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
                 <div className="mb-6">
                     <Link
                         href="/technicians"
-                        className="text-sm font-medium text-blue-700 hover:text-blue-800"
+                        className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900"
                     >
-                        Back to technicians
+                        <span aria-hidden="true">←</span>
+                        <span className="ml-1">Back to technicians</span>
                     </Link>
 
                     <h1 className="mt-3 text-2xl font-semibold text-slate-900">
                         Add technician profile
                     </h1>
 
-                    <p className="mt-2 text-sm text-slate-600">
-                        Link an eligible Technician account and record operational
-                        skills and availability.
+                    <p className="mt-2 break-words text-sm text-slate-600">
+                        Link an eligible Technician account and record operational skills
+                        and availability.
                     </p>
                 </div>
 
                 {result.error ? (
                     <div
-                        className="rounded-md bg-red-50 p-4 text-sm text-red-800"
+                        className="break-words rounded-md bg-red-50 p-4 text-sm text-red-800"
                         role="alert"
                     >
                         {result.error}
@@ -40,14 +41,14 @@ export default async function NewTechnicianPage() {
                 ) : null}
 
                 {!result.error && result.users.length === 0 ? (
-                    <div className="rounded-lg border border-dashed border-slate-300 p-8 text-center">
+                    <div className="rounded-lg border border-dashed border-slate-300 p-6 text-center sm:p-8">
                         <h2 className="text-lg font-semibold text-slate-900">
                             No eligible Technician accounts
                         </h2>
 
                         <p className="mt-2 text-sm text-slate-600">
-                            Every Technician account already has a profile, or no
-                            Technician accounts are available.
+                            Every Technician account already has a profile, or no Technician
+                            accounts are available.
                         </p>
                     </div>
                 ) : null}

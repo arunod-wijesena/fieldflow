@@ -39,22 +39,23 @@ export default async function EditWorkOrderPage({
         }
 
         return (
-            <main className="p-6">
-                <section className="mx-auto max-w-4xl rounded-xl bg-white p-6 shadow-sm">
+            <main className="min-w-0 p-4 sm:p-6">
+                <section className="mx-auto max-w-4xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
                     <h1 className="text-2xl font-semibold text-slate-900">
                         Unable to load Work Order
                     </h1>
 
-                    <p className="mt-2 text-slate-600">
+                    <p className="mt-2 break-words text-slate-600">
                         {workOrderResult.error ??
                             "The Work Order could not be loaded."}
                     </p>
 
                     <Link
                         href="/work-orders"
-                        className="mt-4 inline-block text-sm font-medium text-blue-700 hover:text-blue-800"
+                        className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900"
                     >
-                        Back to Work Orders
+                        <span aria-hidden="true">←</span>
+                        <span className="ml-1">Back to Work Orders</span>
                     </Link>
                 </section>
             </main>
@@ -69,22 +70,23 @@ export default async function EditWorkOrderPage({
         workOrder.status === "CANCELLED"
     ) {
         return (
-            <main className="p-6">
-                <section className="mx-auto max-w-4xl rounded-xl bg-white p-6 shadow-sm">
+            <main className="min-w-0 p-4 sm:p-6">
+                <section className="mx-auto max-w-4xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
                     <h1 className="text-2xl font-semibold text-slate-900">
                         Work Order cannot be edited
                     </h1>
 
-                    <p className="mt-2 text-slate-600">
+                    <p className="mt-2 break-words text-slate-600">
                         In-progress, completed, and cancelled Work Orders cannot be
                         changed through the general editing form.
                     </p>
 
                     <Link
                         href={`/work-orders/${workOrder.id}`}
-                        className="mt-4 inline-block text-sm font-medium text-blue-700 hover:text-blue-800"
+                        className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900"
                     >
-                        Back to Work Order
+                        <span aria-hidden="true">←</span>
+                        <span className="ml-1">Back to Work Order</span>
                     </Link>
                 </section>
             </main>
@@ -93,13 +95,13 @@ export default async function EditWorkOrderPage({
 
     if (customerResult.error || technicianResult.error) {
         return (
-            <main className="p-6">
-                <section className="mx-auto max-w-4xl rounded-xl bg-white p-6 shadow-sm">
+            <main className="min-w-0 p-4 sm:p-6">
+                <section className="mx-auto max-w-4xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
                     <h1 className="text-2xl font-semibold text-slate-900">
                         Unable to edit Work Order
                     </h1>
 
-                    <p className="mt-2 text-slate-600">
+                    <p className="mt-2 break-words text-slate-600">
                         {customerResult.error ??
                             technicianResult.error ??
                             "The editing options could not be loaded."}
@@ -107,9 +109,10 @@ export default async function EditWorkOrderPage({
 
                     <Link
                         href={`/work-orders/${workOrder.id}`}
-                        className="mt-4 inline-block text-sm font-medium text-blue-700 hover:text-blue-800"
+                        className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900"
                     >
-                        Back to Work Order
+                        <span aria-hidden="true">←</span>
+                        <span className="ml-1">Back to Work Order</span>
                     </Link>
                 </section>
             </main>
@@ -121,7 +124,8 @@ export default async function EditWorkOrderPage({
     if (
         workOrder.technician &&
         !technicianOptions.some(
-            (technician) => technician.id === workOrder.technician?.id,
+            (technician) =>
+                technician.id === workOrder.technician?.id,
         )
     ) {
         technicianOptions.push({
@@ -145,21 +149,22 @@ export default async function EditWorkOrderPage({
     );
 
     return (
-        <main className="p-6">
-            <section className="mx-auto max-w-4xl rounded-xl bg-white p-6 shadow-sm">
+        <main className="min-w-0 p-4 sm:p-6">
+            <section className="mx-auto max-w-4xl rounded-xl bg-white p-4 shadow-sm sm:p-6">
                 <div className="mb-6">
                     <Link
                         href={`/work-orders/${workOrder.id}`}
-                        className="text-sm font-medium text-blue-700 hover:text-blue-800"
+                        className="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900"
                     >
-                        Back to Work Order
+                        <span aria-hidden="true">←</span>
+                        <span className="ml-1">Back to Work Order</span>
                     </Link>
 
                     <h1 className="mt-3 text-2xl font-semibold text-slate-900">
                         Edit Work Order
                     </h1>
 
-                    <p className="mt-2 text-sm text-slate-600">
+                    <p className="mt-2 break-words text-sm text-slate-600">
                         Update service details, scheduling, and Technician assignment.
                     </p>
                 </div>
