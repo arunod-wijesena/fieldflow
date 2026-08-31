@@ -78,7 +78,11 @@ export function WorkOrderForm({
   );
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form
+      action={formAction}
+      className="space-y-6"
+      data-testid="work-order-form"
+    >
       {state.message ? (
         <div
           className="break-words rounded-md bg-red-50 p-3 text-sm text-red-800"
@@ -112,7 +116,9 @@ export function WorkOrderForm({
           required
           maxLength={5000}
           defaultValue={defaultValues?.description ?? ""}
-          aria-invalid={Boolean(state.fieldErrors.description)}
+          aria-invalid={Boolean(
+            state.fieldErrors.description,
+          )}
           aria-describedby={
             state.fieldErrors.description
               ? "description-error"
@@ -179,7 +185,9 @@ export function WorkOrderForm({
             name="customerId"
             required
             defaultValue={defaultValues?.customerId ?? ""}
-            aria-invalid={Boolean(state.fieldErrors.customerId)}
+            aria-invalid={Boolean(
+              state.fieldErrors.customerId,
+            )}
             aria-describedby={
               state.fieldErrors.customerId
                 ? "customerId-error"
@@ -220,7 +228,9 @@ export function WorkOrderForm({
           id="technicianId"
           name="technicianId"
           defaultValue={defaultValues?.technicianId ?? ""}
-          aria-invalid={Boolean(state.fieldErrors.technicianId)}
+          aria-invalid={Boolean(
+            state.fieldErrors.technicianId,
+          )}
           aria-describedby={
             state.fieldErrors.technicianId
               ? "technicianId-error technician-help"
@@ -234,7 +244,9 @@ export function WorkOrderForm({
             <option
               key={technician.id}
               value={technician.id}
-              disabled={technician.availability === "UNAVAILABLE"}
+              disabled={
+                technician.availability === "UNAVAILABLE"
+              }
             >
               {technician.user.name} ·{" "}
               {availabilityLabels[technician.availability]} ·{" "}
@@ -247,8 +259,9 @@ export function WorkOrderForm({
           id="technician-help"
           className="mt-1 break-words text-sm text-slate-500"
         >
-          Unavailable Technicians cannot be assigned. Busy Technicians
-          remain selectable with their active workload shown.
+          Unavailable Technicians cannot be assigned. Busy
+          Technicians remain selectable with their active workload
+          shown.
         </p>
 
         {state.fieldErrors.technicianId ? (
@@ -279,12 +292,13 @@ export function WorkOrderForm({
 
       <button
         type="submit"
+        data-testid="work-order-submit"
         disabled={isPending}
         className="min-h-11 w-full rounded-md bg-blue-700 px-4 py-2.5 text-sm font-medium text-white outline-none hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {isPending ? "Saving..." : submitLabel}
       </button>
-    </form>
+    </form >
   );
 }
 
@@ -316,7 +330,9 @@ function WorkOrderField({
         htmlFor={id}
       >
         {label}
-        {required ? <span aria-hidden="true"> *</span> : null}
+        {required ? (
+          <span aria-hidden="true"> *</span>
+        ) : null}
       </label>
 
       <input
