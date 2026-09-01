@@ -42,6 +42,7 @@ export function CompleteJobForm({
 
         <textarea
           id="completion-notes"
+          data-testid="completion-notes"
           name="completionNotes"
           rows={5}
           required
@@ -79,6 +80,7 @@ export function CompleteJobForm({
 
       <button
         type="submit"
+        data-testid="complete-job-submit"
         disabled={isPending}
         className="min-h-11 w-full rounded-md bg-green-700 px-4 py-2.5 text-sm font-medium text-white outline-none hover:bg-green-800 focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >

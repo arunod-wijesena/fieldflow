@@ -34,6 +34,7 @@ export function StartWorkForm({
 
             <button
                 type="submit"
+                data-testid="start-work-submit"
                 disabled={isPending}
                 className="min-h-11 w-full rounded-md bg-blue-700 px-4 py-2.5 text-sm font-medium text-white outline-none hover:bg-blue-800 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
             >

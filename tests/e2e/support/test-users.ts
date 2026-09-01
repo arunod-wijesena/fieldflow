@@ -48,3 +48,7 @@ export function getTestUser(role: TestUserRole): TestUser {
         ),
     };
 }
+
+export function getE2ETechnicianName() {
+    return requireEnvironmentVariable("E2E_TECHNICIAN_NAME");
+}
