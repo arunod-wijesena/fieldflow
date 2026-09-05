@@ -33,3 +33,24 @@ Install command:
 
 ```text
 npm install
+
+## Production deployment
+
+FieldFlow is deployed as a Render Web Service.
+
+Production URL:
+
+https://fieldflow-74vq.onrender.com
+
+Deployment source:
+
+- Repository: FieldFlow GitHub repository
+- Branch: `main`
+- Runtime: Node.js 22
+- Build command: `npm install && npm run build`
+- Start command: `npm run start`
+
+The mentor approved Render as an alternative host after Vercel phone
+verification did not support Sri Lanka/+94.
+
+All production environment values are stored privately in Render.
