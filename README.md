@@ -1178,19 +1178,6 @@ The mandatory authentication, role access, Customer, Technician, Work Order, My 
 
 ## Evidence
 
-Weekly project evidence is stored separately from the source repository.
-
-```text
-FieldFlow Evidence/
-├── Week 1 - Planning and Setup/
-├── Week 2 - Database Authentication and Roles/
-├── Week 3 - Customers and Technicians/
-├── Week 4 - Work Orders and Assignment/
-├── Week 5 - My Jobs Workflow/
-├── Week 6 - Dashboard and Polish/
-└── Week 7 - Testing and Deployment/
-```
-
 Evidence includes:
 
 - GitHub Issues
@@ -1198,7 +1185,6 @@ Evidence includes:
 - Pull requests
 - Commit history
 - Database and Prisma checks
-- Feature screenshots
 - Access-control checks
 - TypeScript output
 - ESLint output
@@ -1206,7 +1192,6 @@ Evidence includes:
 - Playwright output
 - Render deployment
 - Production smoke tests
-- Mentor-approved hosting decision
 
 Evidence does not include:
 
@@ -1275,26 +1260,3 @@ A recommended live demonstration sequence is:
 21. Show the GitHub repository, tests, pull requests, and production deployment evidence.
 
 Never display passwords, environment files, cookies, tokens, or private database information during the demonstration.
-
-## Submission Checklist
-
-Before final submission, confirm:
-
-- Production URL works
-- GitHub repository is accessible
-- `main` contains the final reviewed code
-- Working tree is clean
-- Prisma schema validates
-- Migration status is current
-- Prisma Client generates
-- TypeScript passes
-- ESLint passes without warnings
-- Production build passes
-- All 16 Playwright tests pass
-- README is current
-- Deployment documentation is current
-- Weekly evidence is complete
-- Known issues are documented
-- Demo accounts use fictional data
-- No secrets are committed
-- Render billing is understood and monitored
